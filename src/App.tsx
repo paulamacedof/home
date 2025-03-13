@@ -1,9 +1,7 @@
-import "./App.css";
-
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">Microfrontend HOME</header>
+    <div className="bg-black h-screen flex justify-center items-center">
+      <header className="text-white text-7xl">Microfrontend HOME</header>
     </div>
   );
 }

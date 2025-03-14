@@ -1,4 +1,3 @@
-// craco.config.js (no projeto home)
 const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = {
@@ -7,6 +6,7 @@ module.exports = {
       // Define o publicPath para que os chunks sejam carregados do endereço correto
       webpackConfig.output.publicPath = "http://localhost:3001/";
 
+      // Adiciona o ModuleFederationPlugin
       webpackConfig.plugins.push(
         new ModuleFederationPlugin({
           name: "home",
@@ -24,6 +24,7 @@ module.exports = {
           },
         })
       );
+
       return webpackConfig;
     },
   },

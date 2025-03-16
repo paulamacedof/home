@@ -21,9 +21,9 @@ function App({ state, actions }: AppProps | any) {
   return (
     <div className="bg-black-500 h-screen flex justify-center items-center">
       <header className="text-red-500 text-7xl ">Microfrontend HOME</header>
-      <p>home state: {state.home}</p>
-      <p>statement state: {state.statement}</p>
-      <p>navbar state: {state.navbar}</p>
+      <p>home state: {state?.home}</p>
+      <p>statement state: {state?.statement}</p>
+      <p>navbar state: {state?.navbar}</p>
       <button onClick={handleClick}>state home</button>
     </div>
   );

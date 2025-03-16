@@ -4,7 +4,10 @@ module.exports = {
   webpack: {
     configure: (webpackConfig) => {
       // Define o publicPath para que os chunks sejam carregados do endereço correto
-      webpackConfig.output.publicPath = "http://localhost:3001/";
+      webpackConfig.output.publicPath =
+        process.env.NODE_ENV === "production"
+          ? process.env.PUBLIC_URL + "/"
+          : "http://localhost:3001/";
 
       // Adiciona o ModuleFederationPlugin
       webpackConfig.plugins.push(

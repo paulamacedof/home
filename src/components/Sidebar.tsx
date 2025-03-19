@@ -22,8 +22,6 @@ export function Sidebar({
 
   const mobileClasses = isOpen ? "translate-x-0" : "-translate-x-full";
 
-  console.log(isMobile, "isMobile");
-
   return (
     <section
       className={`text-[#004D61] font-semibold ${

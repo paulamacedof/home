@@ -12,15 +12,15 @@ function getMonthName(dateString: string): string {
 
 function getTransactionName(transaction: string) {
   const transactionMap = new Map([
-    ["deposit", "depósito"],
-    ["transfer", "transferência"],
-    ["expense", "despesa"],
+    ["Debit", "despesa"],
+    ["Credit", "crédito"],
   ]);
   return transactionMap.get(transaction);
 }
 
 export function LastTransactions({ transactions }: Props) {
   const lastTransactions = transactions.slice(0, 3);
+  console.log(lastTransactions, "lastTransactions");
 
   return (
     <section className="bg-white rounded-lg p-6">

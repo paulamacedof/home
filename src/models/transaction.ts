@@ -1,4 +1,4 @@
-export type TransactionType = "deposit" | "transfer" | "expense";
+export type TransactionType = "Debit" | "Credit";
 
 export interface TransactionRequest {
   accountId: string;

@@ -56,9 +56,8 @@ export function AddTransactionForm({
           <option value="" defaultValue="" disabled>
             Selecione o tipo de transação
           </option>
-          <option value="deposit">Depósito</option>
-          <option value="transfer">Transferência</option>
-          <option value="expense">Despesa</option>
+          <option value="Debit">Despesa</option>
+          <option value="Credit">Crédito</option>
         </select>
 
         <div className="mb-8">

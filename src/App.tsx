@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { TransactionResponse } from "./models/transaction";
-import { UserResponse } from "./models/user";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { toast } from "sonner";
 import { AddTransactionForm } from "./components/AddTransactionForm";
@@ -11,9 +9,9 @@ import { Modal } from "./components/Modal";
 import { addTransaction } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
 import { AccountResponse } from "./models/account";
+import { useState } from "react";
 
 interface AppProps {
-  user: UserResponse;
   account: AccountResponse;
   transactionStore: {
     transactions: TransactionResponse[];
@@ -31,10 +29,9 @@ const options: Intl.DateTimeFormatOptions = {
 
 const dataFormatada = new Date().toLocaleDateString("pt-BR", options);
 
-function App({ user, transactionStore }: AppProps | any) {
-  const pathname = window.location.pathname;
+function App({ account, transactionStore }: AppProps | any) {
   const token = localStorage.getItem("token");
-  console.log(pathname, "pathname");
+  const user = JSON.parse(localStorage.getItem("user") as string);
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,8 +41,10 @@ function App({ user, transactionStore }: AppProps | any) {
     setIsBalanceVisible(!isBalanceVisible);
   };
 
+  console.log(transactionStore.transactions, "transactionStore.transactions");
+
   return (
-    <section className="bg-[#E4EDE3]">
+    <section className="bg-[#E4EDE3] h-screen">
       <section className="grid lg:grid-cols-[180px_1fr_280px] gap-6 max-w-7xl m-auto p-6 ]">
         <Sidebar />
 
@@ -99,7 +98,7 @@ function App({ user, transactionStore }: AppProps | any) {
               addTransaction(token as string, {
                 type: transaction.type,
                 value: transaction.amount,
-                accountId: user.id, //TODO: mudar para conta id
+                accountId: "67d5cb96f273c147ae3b0269",
               });
               toast.success("Transação criada com sucesso!");
               closeModal();

@@ -90,7 +90,9 @@ function App({ account, transactionStore }: AppProps | any) {
           </div>
         </section>
 
-        <LastTransactions transactions={transactionStore?.transactions} />
+        <LastTransactions
+          transactions={transactionStore?.transactions as TransactionResponse[]}
+        />
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <AddTransactionForm
@@ -98,7 +100,7 @@ function App({ account, transactionStore }: AppProps | any) {
               addTransaction(token as string, {
                 type: transaction.type,
                 value: transaction.amount,
-                accountId: "67d5cb96f273c147ae3b0269",
+                accountId: "67d5cb96f273c147ae3b0269", //TODO: tirar mock account.id,
               });
               toast.success("Transação criada com sucesso!");
               closeModal();

@@ -20,7 +20,6 @@ function getTransactionName(transaction: string) {
 
 export function LastTransactions({ transactions }: Props) {
   const lastTransactions = transactions.slice(0, 3);
-  console.log(lastTransactions, "lastTransactions");
 
   return (
     <section className="bg-white rounded-lg p-6">
@@ -50,7 +49,7 @@ export function LastTransactions({ transactions }: Props) {
               </p>
               <p className="font-roboto-mono font-semibold">
                 {["transfer", "expense"].includes(t.type) && "- "}
-                {formatCurrency(t.amount)}
+                {formatCurrency(t.value)}
               </p>
             </li>
           ))}

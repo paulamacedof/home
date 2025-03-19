@@ -22,7 +22,7 @@ export function LastTransactions({ transactions }: Props) {
   const lastTransactions = transactions.slice(0, 3);
 
   return (
-    <section className="bg-white rounded-lg p-6">
+    <section className="bg-white rounded-lg p-6 lg:max-w-[300px]">
       <h2 className="font-bold pb-6">Últimas Transações</h2>
 
       {lastTransactions.length === 0 ? (

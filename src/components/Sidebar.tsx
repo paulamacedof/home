@@ -15,7 +15,7 @@ export function Sidebar({
 }: SidebarProps) {
   const links = [
     { href: "/", label: "Home" },
-    { href: "/transactions", label: "Extrato" },
+    { href: "/statement", label: "Extrato" },
     { href: "/investments", label: "Investimentos" },
     { href: "/other-services", label: "Outros Serviços" },
   ];

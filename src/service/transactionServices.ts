@@ -1,20 +1,23 @@
-import { TransactionRequest } from "@/models/Transaction";
-import { api } from "./axios";
+import { TransactionRequest } from "@/models/transaction";
+import api from "./axios";
 
-const baseURL = "bff/account";
+const baseURL = "/account ";
 
-export const addTransaction = async (transaction: TransactionRequest) => {
+export const addTransaction = async (
+  token: string,
+  transaction: TransactionRequest
+) => {
   try {
-    //const request = await api.post(`${baseURL}/transaction`, { transaction });
-    //return request.data;
-
-    return {
-      id: "string",
-      accountId: "string",
-      type: "string",
-      value: 0,
-      date: "2025-03-18T13:49:55.889Z",
-    };
+    const request = await api.post(
+      `${baseURL}/transaction`,
+      { transaction },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return request.data;
   } catch (error) {
     console.error("Error creating transaction:", error);
     throw error;

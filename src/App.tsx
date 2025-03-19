@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
-import { TransactionResponse } from "./models/Transaction";
+import { TransactionResponse } from "./models/transaction";
 import { UserResponse } from "./models/user";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { toast } from "sonner";
@@ -10,9 +10,11 @@ import { LastTransactions } from "./components/LastTransactions";
 import { Modal } from "./components/Modal";
 import { addTransaction } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
+import { AccountResponse } from "./models/account";
 
 interface AppProps {
   user: UserResponse;
+  account: AccountResponse;
   transactionStore: {
     transactions: TransactionResponse[];
     addTransaction: (transaction: TransactionResponse) => void;
@@ -31,6 +33,7 @@ const dataFormatada = new Date().toLocaleDateString("pt-BR", options);
 
 function App({ user, transactionStore }: AppProps | any) {
   const pathname = window.location.pathname;
+  const token = localStorage.getItem("token");
   console.log(pathname, "pathname");
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -93,7 +96,7 @@ function App({ user, transactionStore }: AppProps | any) {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <AddTransactionForm
             onSubmit={(transaction) => {
-              addTransaction({
+              addTransaction(token as string, {
                 type: transaction.type,
                 value: transaction.amount,
                 accountId: user.id, //TODO: mudar para conta id

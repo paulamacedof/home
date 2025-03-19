@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NumericFormat } from "react-number-format";
 import { Button } from "./Button";
-import { TransactionType } from "@/models/Transaction";
+import { TransactionType } from "@/models/transaction";
 
 interface AddTransactionFormProps {
   initialType?: TransactionType | "";

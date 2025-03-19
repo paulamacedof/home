@@ -1,4 +1,4 @@
-import { TransactionResponse } from "@/models/Transaction";
+import { TransactionResponse } from "@/models/transaction";
 import { formatCurrency } from "../utils/formatCurrency";
 
 interface Props {

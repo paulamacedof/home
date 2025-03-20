@@ -7,11 +7,10 @@ import { LastTransactions } from "./components/LastTransactions";
 import { Modal } from "./components/Modal";
 import { addTransaction } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
-import { AccountResponse } from "./models/account";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface AppProps {
-  account: AccountResponse;
+  accountId: string;
   transactionStore: {
     transactions: TransactionResponse[];
     addTransaction: (transaction: TransactionResponse) => void;
@@ -28,9 +27,10 @@ const options: Intl.DateTimeFormatOptions = {
 
 const dataFormatada = new Date().toLocaleDateString("pt-BR", options);
 
-function App({ account, transactionStore }: AppProps | any) {
+function App({ accountId, transactionStore }: AppProps | any) {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") as string);
+
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,10 +40,13 @@ function App({ account, transactionStore }: AppProps | any) {
     setIsBalanceVisible(!isBalanceVisible);
   };
 
-  console.log(transactionStore.transactions, "transactionStore.transactions");
-
+  useEffect(() => {
+    if (accountId) {
+      console.log(accountId, "accountId");
+    }
+  }, [accountId]);
   return (
-    <section className="flex flex-col lg:flex-row gap-6 w-full max-w-7xl">
+    <section className="flex flex-col lg:flex-row lg:max-h-[500px] gap-6 w-full max-w-7xl">
       <section className="flex flex-col bg-[#004D61] w-full rounded-lg p-10 md:p-6">
         <div className="text-white text-center md:text-left">
           <h2 className="mb-6 text-[25px]">
@@ -96,7 +99,7 @@ function App({ account, transactionStore }: AppProps | any) {
             addTransaction(token as string, {
               type: transaction.type,
               value: transaction.amount,
-              accountId: "67d5cb96f273c147ae3b0269", //TODO: tirar mock account.id,
+              accountId: accountId, //TODO: tirar mock account.id,
             });
             toast.success("Transação criada com sucesso!");
             closeModal();

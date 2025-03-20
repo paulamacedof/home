@@ -19,19 +19,17 @@ function getTransactionName(transaction: string) {
 }
 
 export function LastTransactions({ transactions }: Props) {
-  const lastTransactions = transactions.slice(0, 3);
-
   return (
-    <section className="bg-white rounded-lg p-6 lg:max-w-[300px]">
+    <section className="bg-white rounded-lg p-6 lg:min-w-[300px]">
       <h2 className="font-bold pb-6">Últimas Transações</h2>
 
-      {lastTransactions.length === 0 ? (
+      {transactions.length === 0 ? (
         <p className="text-center text-gray-500">
           Nenhuma transação cadastrada.
         </p>
       ) : (
         <ul className="grid md:grid-cols-2 md:gap-x-10 lg:grid-cols-1">
-          {lastTransactions.map((t, index) => (
+          {transactions.map((t, index) => (
             <li
               key={index}
               className={`flex flex-col gap-2 border-b-2 border-dashed border-[#84cc16] py-4 ${
@@ -44,7 +42,7 @@ export function LastTransactions({ transactions }: Props) {
               <p className="flex justify-between items-center capitalize">
                 {getTransactionName(t.type)}
                 <span className="text-gray-400 text-sm">
-                  {t.date.toLocaleDateString()}
+                  {new Date(t.date).toLocaleDateString("pt-BR")}
                 </span>
               </p>
               <p className="font-roboto-mono font-semibold">

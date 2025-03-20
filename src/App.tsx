@@ -5,14 +5,16 @@ import { AddTransactionForm } from "./components/AddTransactionForm";
 import { Button } from "./components/Button";
 import { LastTransactions } from "./components/LastTransactions";
 import { Modal } from "./components/Modal";
-import { addTransaction } from "./service/transactionServices";
+import {
+  addTransaction,
+  getLastTrasactions,
+} from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
 import { useEffect, useState } from "react";
 
 interface AppProps {
   accountId: string;
   transactionStore: {
-    transactions: TransactionResponse[];
     addTransaction: (transaction: TransactionResponse) => void;
     getTransactions: (transactions: TransactionResponse[]) => void;
   };
@@ -33,6 +35,9 @@ function App({ accountId, transactionStore }: AppProps | any) {
 
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [lastTransactions, setLastTransactions] = useState<
+    TransactionResponse[]
+  >([]);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -41,10 +46,20 @@ function App({ accountId, transactionStore }: AppProps | any) {
   };
 
   useEffect(() => {
-    if (accountId) {
-      console.log(accountId, "accountId");
-    }
-  }, [accountId]);
+    const handleLastTransactions = async () => {
+      if (accountId) {
+        const lastTransactions = await getLastTrasactions(
+          token as string,
+          accountId
+        );
+
+        setLastTransactions(lastTransactions);
+      }
+    };
+
+    handleLastTransactions();
+  }, [accountId, token]);
+
   return (
     <section className="flex flex-col lg:flex-row lg:max-h-[500px] gap-6 w-full max-w-7xl">
       <section className="flex flex-col bg-[#004D61] w-full rounded-lg p-10 md:p-6">
@@ -90,7 +105,7 @@ function App({ accountId, transactionStore }: AppProps | any) {
       </section>
 
       <LastTransactions
-        transactions={transactionStore?.transactions as TransactionResponse[]}
+        transactions={lastTransactions as TransactionResponse[]}
       />
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
@@ -99,7 +114,7 @@ function App({ accountId, transactionStore }: AppProps | any) {
             addTransaction(token as string, {
               type: transaction.type,
               value: transaction.amount,
-              accountId: accountId, //TODO: tirar mock account.id,
+              accountId: accountId,
             });
             toast.success("Transação criada com sucesso!");
             closeModal();

@@ -2,7 +2,7 @@ export type TransactionType = "Debit" | "Credit";
 
 export interface TransactionRequest {
   accountId: string;
-  type: TransactionType;
+  type: TransactionType | string;
   value: number;
 }
 

@@ -1,4 +1,4 @@
-import { TransactionResponse } from "./models/transaction";
+import { TransactionRequest, TransactionResponse } from "./models/transaction";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { toast } from "sonner";
 import { AddTransactionForm } from "./components/AddTransactionForm";
@@ -11,13 +11,11 @@ import {
 } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
 import { useEffect, useState } from "react";
+import { AccountResponse } from "./models/account";
 
 interface AppProps {
-  accountId: string;
-  transactionStore: {
-    addTransaction: (transaction: TransactionResponse) => void;
-    getTransactions: (transactions: TransactionResponse[]) => void;
-  };
+  account: AccountResponse;
+  setAccount: (token: string) => void;
 }
 
 const options: Intl.DateTimeFormatOptions = {
@@ -29,7 +27,7 @@ const options: Intl.DateTimeFormatOptions = {
 
 const dataFormatada = new Date().toLocaleDateString("pt-BR", options);
 
-function App({ accountId, transactionStore }: AppProps | any) {
+function App({ account, setAccount }: AppProps | any) {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") as string);
 
@@ -47,18 +45,34 @@ function App({ accountId, transactionStore }: AppProps | any) {
 
   useEffect(() => {
     const handleLastTransactions = async () => {
-      if (accountId) {
+      if (account?.id) {
         const lastTransactions = await getLastTrasactions(
           token as string,
-          accountId
+          account?.id
         );
-
         setLastTransactions(lastTransactions);
       }
     };
 
     handleLastTransactions();
-  }, [accountId, token]);
+  }, [account?.id, token]);
+
+  const handleAddTransaction = async (transaction: TransactionRequest) => {
+    const result = await addTransaction(token as string, {
+      type: transaction.type,
+      value: transaction.value,
+      accountId: account?.id,
+    });
+    const newArray = lastTransactions;
+    newArray.unshift(result);
+    newArray.pop();
+    setAccount(token);
+
+    setLastTransactions(newArray);
+
+    toast.success("Transação criada com sucesso!");
+    closeModal();
+  };
 
   return (
     <section className="flex flex-col lg:flex-row lg:max-h-[500px] gap-6 w-full max-w-7xl">
@@ -94,7 +108,9 @@ function App({ accountId, transactionStore }: AppProps | any) {
           <div>
             <p className="pb-2">Conta Corrente</p>
             <p className="font-roboto-mono text-2xl md:text-3xl md:pr-16">
-              {isBalanceVisible ? formatCurrency(3000) : "R$ ******"}
+              {isBalanceVisible
+                ? formatCurrency(account?.balance)
+                : "R$ ******"}
             </p>
           </div>
         </div>
@@ -110,15 +126,7 @@ function App({ accountId, transactionStore }: AppProps | any) {
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <AddTransactionForm
-          onSubmit={(transaction) => {
-            addTransaction(token as string, {
-              type: transaction.type,
-              value: transaction.amount,
-              accountId: accountId,
-            });
-            toast.success("Transação criada com sucesso!");
-            closeModal();
-          }}
+          onSubmit={(transaction) => handleAddTransaction(transaction)}
         />
       </Modal>
     </section>

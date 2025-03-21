@@ -1,17 +1,12 @@
 import { useState, useEffect } from "react";
 import { NumericFormat } from "react-number-format";
 import { Button } from "./Button";
-import { TransactionType } from "@/models/transaction";
+import { TransactionRequest, TransactionType } from "@/models/transaction";
 
 interface AddTransactionFormProps {
   initialType?: TransactionType | "";
   initialAmount?: number;
-  initialDate?: string;
-  onSubmit: (transaction: {
-    type: TransactionType;
-    amount: number;
-    date: string;
-  }) => void;
+  onSubmit: (transaction: TransactionRequest) => void;
   title?: string;
   buttonText?: string;
 }
@@ -19,29 +14,26 @@ interface AddTransactionFormProps {
 export function AddTransactionForm({
   initialType = "",
   initialAmount = 0,
-  initialDate = new Date().toISOString().split("T")[0],
   onSubmit,
   title = "Adicionar Nova Transação",
   buttonText = "Criar Transação",
 }: AddTransactionFormProps) {
   const [type, setType] = useState<TransactionType | "">(initialType);
   const [amount, setAmount] = useState<string>(initialAmount.toString());
-  const [date, setDate] = useState<string>(initialDate);
   const isDisabled = parseFloat(amount) <= 0 || type === "";
 
   const handleSubmit = () => {
     onSubmit({
-      type: type as TransactionType,
-      amount: parseFloat(amount),
-      date,
+      type,
+      value: Number(amount),
+      accountId: "",
     });
   };
 
   useEffect(() => {
     setType(initialType);
     setAmount(initialAmount.toString());
-    setDate(initialDate);
-  }, [initialType, initialAmount, initialDate]);
+  }, [initialType, initialAmount]);
 
   return (
     <>
@@ -78,19 +70,6 @@ export function AddTransactionForm({
             className="w-full p-4 border border-[#004D61] rounded-lg"
             placeholder="R$ 0,00"
             required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label htmlFor="date" className="block mb-1">
-            Data
-          </label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full p-4 border border-[#004D61] rounded-lg"
           />
         </div>
 

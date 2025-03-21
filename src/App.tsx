@@ -1,6 +1,6 @@
 import { TransactionRequest, TransactionResponse } from "./models/transaction";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import { AddTransactionForm } from "./components/AddTransactionForm";
 import { Button } from "./components/Button";
 import { LastTransactions } from "./components/LastTransactions";
@@ -65,6 +65,7 @@ function App({ account, setAccount }: AppProps | any) {
   }, [account?.id, token]);
 
   const handleAddTransaction = async (transaction: TransactionRequest) => {
+    setLoading(true);
     const result = await addTransaction(token as string, {
       type: transaction.type,
       value: transaction.value,
@@ -78,6 +79,7 @@ function App({ account, setAccount }: AppProps | any) {
     setLastTransactions(newArray);
 
     toast.success("Transação criada com sucesso!");
+    setLoading(false);
     closeModal();
   };
 
@@ -138,9 +140,12 @@ function App({ account, setAccount }: AppProps | any) {
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <AddTransactionForm
+          loading={loading}
           onSubmit={(transaction) => handleAddTransaction(transaction)}
         />
       </Modal>
+
+      <Toaster position="top-right" richColors closeButton />
     </section>
   );
 }

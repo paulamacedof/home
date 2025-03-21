@@ -20,7 +20,7 @@ export const addTransaction = async (
   }
 };
 
-export const getLastTrasactions = async (token: string, accountId: string) => {
+export const getLastTransactions = async (token: string, accountId: string) => {
   try {
     const request = await api.get(`${baseUrl}/${accountId}/last-transactions`, {
       headers: {

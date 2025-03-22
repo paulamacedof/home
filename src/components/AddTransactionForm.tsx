@@ -9,6 +9,7 @@ interface AddTransactionFormProps {
   onSubmit: (transaction: TransactionRequest) => void;
   title?: string;
   buttonText?: string;
+  loading?: boolean;
 }
 
 export function AddTransactionForm({
@@ -17,6 +18,7 @@ export function AddTransactionForm({
   onSubmit,
   title = "Adicionar Nova Transação",
   buttonText = "Criar Transação",
+  loading = false,
 }: AddTransactionFormProps) {
   const [type, setType] = useState<TransactionType | "">(initialType);
   const [amount, setAmount] = useState<string>(initialAmount.toString());
@@ -76,9 +78,9 @@ export function AddTransactionForm({
         <Button
           variant="secondary"
           onClick={handleSubmit}
-          disabled={isDisabled}
+          disabled={isDisabled || loading}
         >
-          {buttonText}
+          {loading ? "Aguarde" : buttonText}
         </Button>
       </form>
     </>

@@ -3,6 +3,7 @@ import { formatCurrency } from "../utils/formatCurrency";
 
 interface Props {
   transactions: TransactionResponse[];
+  loading: boolean;
 }
 
 function getMonthName(dateString: string): string {
@@ -18,12 +19,15 @@ function getTransactionName(transaction: string) {
   return transactionMap.get(transaction);
 }
 
-export function LastTransactions({ transactions }: Props) {
+export function LastTransactions({ transactions, loading }: Props) {
   return (
     <section className="bg-white rounded-lg p-6 lg:min-w-[300px]">
       <h2 className="font-bold pb-6">Últimas Transações</h2>
-
-      {transactions.length === 0 ? (
+      {loading ? (
+        <p className="text-center text-gray-500">
+          Carregando últimas transações...
+        </p>
+      ) : transactions.length === 0 ? (
         <p className="text-center text-gray-500">
           Nenhuma transação cadastrada.
         </p>

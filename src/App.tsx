@@ -1,13 +1,13 @@
 import { TransactionRequest, TransactionResponse } from "./models/transaction";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { toast } from "sonner";
+import { Toaster, toast } from "sonner";
 import { AddTransactionForm } from "./components/AddTransactionForm";
 import { Button } from "./components/Button";
 import { LastTransactions } from "./components/LastTransactions";
 import { Modal } from "./components/Modal";
 import {
   addTransaction,
-  getLastTrasactions,
+  getLastTransactions,
 } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
 import { useEffect, useState } from "react";
@@ -31,6 +31,7 @@ function App({ account, setAccount }: AppProps | any) {
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user") as string);
 
+  const [loading, setLoading] = useState(true);
   const [isBalanceVisible, setIsBalanceVisible] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastTransactions, setLastTransactions] = useState<
@@ -45,12 +46,18 @@ function App({ account, setAccount }: AppProps | any) {
 
   useEffect(() => {
     const handleLastTransactions = async () => {
-      if (account?.id) {
-        const lastTransactions = await getLastTrasactions(
+      if (!account?.id) return;
+
+      try {
+        const lastTransactions = await getLastTransactions(
           token as string,
           account?.id
         );
         setLastTransactions(lastTransactions);
+      } catch (error) {
+        toast.error("Falha ao buscar transações.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -58,6 +65,7 @@ function App({ account, setAccount }: AppProps | any) {
   }, [account?.id, token]);
 
   const handleAddTransaction = async (transaction: TransactionRequest) => {
+    setLoading(true);
     const result = await addTransaction(token as string, {
       type: transaction.type,
       value: transaction.value,
@@ -71,6 +79,7 @@ function App({ account, setAccount }: AppProps | any) {
     setLastTransactions(newArray);
 
     toast.success("Transação criada com sucesso!");
+    setLoading(false);
     closeModal();
   };
 
@@ -107,11 +116,15 @@ function App({ account, setAccount }: AppProps | any) {
           </div>
           <div>
             <p className="pb-2">Conta Corrente</p>
-            <p className="font-roboto-mono text-2xl md:text-3xl md:pr-16">
-              {isBalanceVisible
-                ? formatCurrency(account?.balance)
-                : "R$ ******"}
-            </p>
+            {loading ? (
+              <p className="text-gray-400">Carregando saldo...</p>
+            ) : (
+              <p className="font-roboto-mono text-2xl md:text-3xl md:pr-16">
+                {isBalanceVisible
+                  ? formatCurrency(account?.balance)
+                  : "R$ ******"}
+              </p>
+            )}
           </div>
         </div>
 
@@ -121,14 +134,18 @@ function App({ account, setAccount }: AppProps | any) {
       </section>
 
       <LastTransactions
+        loading={loading}
         transactions={lastTransactions as TransactionResponse[]}
       />
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <AddTransactionForm
+          loading={loading}
           onSubmit={(transaction) => handleAddTransaction(transaction)}
         />
       </Modal>
+
+      <Toaster position="top-right" richColors closeButton />
     </section>
   );
 }

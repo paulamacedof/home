@@ -4,6 +4,7 @@ export interface TransactionRequest {
   accountId: string;
   type: TransactionType | string;
   value: number;
+  anexo?: string;
 }
 
 export interface TransactionResponse {
@@ -12,4 +13,5 @@ export interface TransactionResponse {
   type: TransactionType;
   value: number;
   date: Date;
+  anexo?: string;
 }

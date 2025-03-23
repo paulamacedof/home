@@ -70,6 +70,7 @@ function App({ account, setAccount }: AppProps | any) {
       type: transaction.type,
       value: transaction.value,
       accountId: account?.id,
+      anexo: transaction.anexo,
     });
     const newArray = lastTransactions;
     newArray.unshift(result);

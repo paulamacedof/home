@@ -22,14 +22,29 @@ export function AddTransactionForm({
 }: AddTransactionFormProps) {
   const [type, setType] = useState<TransactionType | "">(initialType);
   const [amount, setAmount] = useState<string>(initialAmount.toString());
-  const isDisabled = parseFloat(amount) <= 0 || type === "";
+  const [base64, setBase64] = useState("");
 
   const handleSubmit = () => {
     onSubmit({
       type,
       value: Number(amount),
       accountId: "",
+      anexo: base64,
     });
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setBase64(reader.result?.toString().split(",")[1] || "");
+      };
+
+      reader.readAsDataURL(file);
+    }
   };
 
   useEffect(() => {
@@ -75,11 +90,15 @@ export function AddTransactionForm({
           />
         </div>
 
-        <Button
-          variant="secondary"
-          onClick={handleSubmit}
-          disabled={isDisabled || loading}
-        >
+        <div className="mb-8">
+          <label htmlFor="amount" className="block mb-1">
+            Anexo
+          </label>
+
+          <input type="file" accept="image/*" onChange={handleFileChange} />
+        </div>
+
+        <Button variant="secondary" onClick={handleSubmit} disabled={loading}>
           {loading ? "Aguarde" : buttonText}
         </Button>
       </form>

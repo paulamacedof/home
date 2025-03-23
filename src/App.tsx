@@ -1,17 +1,17 @@
-import { TransactionRequest, TransactionResponse } from "./models/transaction";
+import { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { Toaster, toast } from "sonner";
 import { AddTransactionForm } from "./components/AddTransactionForm";
 import { Button } from "./components/Button";
 import { LastTransactions } from "./components/LastTransactions";
 import { Modal } from "./components/Modal";
+import { AccountResponse } from "./models/account";
+import { TransactionRequest, TransactionResponse } from "./models/transaction";
 import {
   addTransaction,
   getLastTransactions,
 } from "./service/transactionServices";
 import { formatCurrency } from "./utils/formatCurrency";
-import { useEffect, useState } from "react";
-import { AccountResponse } from "./models/account";
 
 interface AppProps {
   account: AccountResponse;
@@ -89,7 +89,7 @@ function App({ account, setAccount }: AppProps | any) {
       <section className="flex flex-col bg-[#004D61] w-full rounded-lg p-10 md:p-6">
         <div className="text-white text-center md:text-left">
           <h2 className="mb-6 text-[25px]">
-            Olá, {user && user.username.split(" ")[0]}! :)
+            Olá, {user && user.username?.split(" ")[0]}!
           </h2>
           <p className="text-sm capitalize">{dataFormatada}</p>
         </div>

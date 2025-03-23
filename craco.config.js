@@ -42,4 +42,10 @@ module.exports = {
       return webpackConfig;
     },
   },
+
+  style: {
+    postcss: {
+      mode: "file",
+    },
+  },
 };
